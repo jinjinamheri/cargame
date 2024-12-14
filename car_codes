@@ -1,0 +1,39 @@
+extends CharacterBody2D
+
+var speed = 0
+var can_drive = false
+@onready var animated_sprite_2D =$AnimatedSprite2D
+
+
+func _ready():
+	animated_sprite_2D.play("default")
+func _physics_process(delta):
+	if can_drive:
+		move_car()
+	
+
+	
+	position += speed * Vector2.from_angle(rotation)
+func move_car():
+	speed = speed* 0.98
+	if Input.is_action_pressed("ui_right"):
+		rotate(0.1)
+	if Input.is_action_pressed("ui_left"):
+		rotate(-0.1)
+		
+	if Input.is_action_pressed("ui_up"):
+		if speed < 6:
+			speed += 0.1
+	if Input.is_action_pressed("ui_down"):
+		if speed > -2:
+			speed -= 0.1
+			
+	#move_and_slide()
+	
+func _on_area_2d_area_exited(area):
+	if area.is_in_group("roads"):
+		animated_sprite_2D
+		print('CRASH')
+		can_drive = false
+		get_tree().create_timer(1,0).timeout
+		get_tree().reload_current_scene
