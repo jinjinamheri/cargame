@@ -1,0 +1,52 @@
+extends Node2D
+
+
+@onready var start_timer = $StartTimer
+@onready var start321 = $Start321
+@onready var car = $car
+
+
+var checkpoint = [false, false, false, false]
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	if start_timer.time_left > 1:
+		start321.text = str(floor(start_timer.time_left))
+	elif start_timer.time_left > 0 :
+		start321.text ="START"
+	else:
+		start321.text =""
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+func _on_start_end_area_entered(area):
+	if area.name == "HitArea":
+		if checkpoint == [true, true, true, true]:
+			print('GAME OVER')
+			car.can_drive = false
+			await(get_tree().create_timer(1.0).timeout)
+			get_tree().reload_current_scene()
+
+
+func _on_startimer_timeout():
+	car.can_drive = true
+
+
+func _on_checkpoint_1_area_entered(area):
+	if area.name =='HitArea':
+		checkpoint[0] = true
+
+
+func _on_checkpoint_2_area_entered(area):
+	if area.name =='HitArea':
+		checkpoint[1] = true
+
+func _on_checkpoint_3_area_entered(area):
+	if area.name =='HitArea':
+		checkpoint[2] = true
+
+
+func _on_checkpoint_4_area_entered(area):
+	if area.name =='HitArea':
+		checkpoint[3] = true
